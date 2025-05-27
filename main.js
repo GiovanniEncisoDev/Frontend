@@ -1,28 +1,39 @@
 const API_URL = 'https://backend-lh75.onrender.com/peliculas';
 
 async function cargarPeliculas() {
-  const res = await fetch(API_URL);
-  const peliculas = await res.json();
+  try {
+    const res = await fetch(API_URL);
+    const peliculas = await res.json();
 
-  const tbody = document.querySelector('#tablaPeliculas tbody');
-  tbody.innerHTML = '';
+    const tbody = document.querySelector('#tablaPeliculas tbody');
+    tbody.innerHTML = '';
 
-  peliculas.forEach(p => {
-    console.log('ID película:', p.idPelicula);  // Para debug
-    const fila = document.createElement('tr');
-    fila.innerHTML = `
-      <td>${p.idPelicula}</td>
-      <td>${p.titulo}</td>
-      <td>${p.director}</td>
-      <td>${p.genero}</td>
-      <td>${p.anio}</td>
-      <td><img src="${p.imagen || ''}" alt="img" width="50"></td>
-      <td><a href="${p.url || '#'}" target="_blank">Ver</a></td>
-      <td><button class="btn-eliminar" data-id="${p.idPelicula}">Eliminar</button></td>
-    `;
-    tbody.appendChild(fila);
-  });
+    peliculas.forEach(p => {
+      const id = p.idPelicula;
+      if (!id) {
+        console.warn('Película con ID inválido:', p);
+        return; // Salta esta película
+      }
+
+      const fila = document.createElement('tr');
+      fila.innerHTML = `
+        <td>${id}</td>
+        <td>${p.titulo}</td>
+        <td>${p.director}</td>
+        <td>${p.genero}</td>
+        <td>${p.anio}</td>
+        <td><img src="${p.imagen || ''}" alt="img" width="50"></td>
+        <td><a href="${p.url || '#'}" target="_blank">Ver</a></td>
+        <td><button class="btn-eliminar" data-id="${id}">Eliminar</button></td>
+      `;
+      tbody.appendChild(fila);
+    });
+  } catch (err) {
+    console.error('Error al cargar películas:', err);
+    alert('Error al cargar películas');
+  }
 }
+
 
 // Delegación de evento para eliminar
 document.querySelector('#tablaPeliculas tbody').addEventListener('click', async (e) => {
