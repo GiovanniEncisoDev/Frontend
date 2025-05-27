@@ -8,6 +8,7 @@ async function cargarPeliculas() {
   tbody.innerHTML = '';
 
   peliculas.forEach(p => {
+    console.log('ID película:', p.idPelicula);  // Para debug
     const fila = document.createElement('tr');
     fila.innerHTML = `
       <td>${p.idPelicula}</td>
@@ -21,15 +22,26 @@ async function cargarPeliculas() {
     `;
     tbody.appendChild(fila);
   });
-
-  // Delegar eventos de eliminación
-  document.querySelectorAll('.btn-eliminar').forEach(btn => {
-    btn.addEventListener('click', async (e) => {
-      const id = e.target.dataset.id;
-      await eliminar(id);
-    });
-  });
 }
+
+// Delegación de evento para eliminar
+document.querySelector('#tablaPeliculas tbody').addEventListener('click', async (e) => {
+  if (e.target.classList.contains('btn-eliminar')) {
+    const id = e.target.dataset.id;
+    if (!id) {
+      alert('ID no válido para eliminar');
+      return;
+    }
+    if (confirm('¿Estás seguro de eliminar esta película?')) {
+      const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
+      if (res.ok) {
+        cargarPeliculas();
+      } else {
+        alert('Error al eliminar la película');
+      }
+    }
+  }
+});
 
 document.getElementById('formAgregar').addEventListener('submit', async (e) => {
   e.preventDefault();
@@ -55,16 +67,5 @@ document.getElementById('formAgregar').addEventListener('submit', async (e) => {
     alert('Error al agregar la película');
   }
 });
-
-async function eliminar(id) {
-  if (!confirm('¿Estás seguro de eliminar esta película?')) return;
-
-  const res = await fetch(`${API_URL}/${id}`, { method: 'DELETE' });
-  if (res.ok) {
-    cargarPeliculas();
-  } else {
-    alert('Error al eliminar la película');
-  }
-}
 
 cargarPeliculas();
