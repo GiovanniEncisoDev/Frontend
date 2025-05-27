@@ -68,4 +68,16 @@ document.getElementById('formAgregar').addEventListener('submit', async (e) => {
   }
 });
 
+/* Método de respaldo para asignar IDs secuenciales si vienen como undefined
+function corregirIdsFallback() {
+  const botones = document.querySelectorAll('.btn-eliminar');
+  botones.forEach((btn, index) => {
+    if (!btn.dataset.id || btn.dataset.id === 'undefined') {
+      btn.dataset.id = index + 1; // Asume que los IDs empiezan en 1 y son secuenciales
+    }
+  });
+}
+*/
+
 cargarPeliculas();
+// corregirIdsFallback(); // Descomenta solo para pruebas si los IDs llegan como undefined
