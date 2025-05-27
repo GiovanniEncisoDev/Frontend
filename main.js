@@ -10,14 +10,14 @@ async function cargarPeliculas() {
   peliculas.forEach(p => {
     const fila = document.createElement('tr');
     fila.innerHTML = `
-      <td>${p.id}</td>
+      <td>${p.idPelicula}</td>
       <td>${p.titulo}</td>
       <td>${p.director}</td>
       <td>${p.genero}</td>
       <td>${p.anio}</td>
       <td><img src="${p.imagen || ''}" alt="img" width="50"></td>
       <td><a href="${p.url || '#'}" target="_blank">Ver</a></td>
-      <td><button class="btn-eliminar" data-id="${p.id}">Eliminar</button></td>
+      <td><button class="btn-eliminar" data-id="${p.idPelicula}">Eliminar</button></td>
     `;
     tbody.appendChild(fila);
   });
