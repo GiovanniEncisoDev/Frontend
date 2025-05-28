@@ -12,7 +12,7 @@ async function cargarPeliculas() {
       const id = p.idPelicula;
       if (!id) {
         console.warn('Película con ID inválido:', p);
-        return; // Salta esta película
+        return;
       }
 
       const fila = document.createElement('tr');
@@ -34,8 +34,6 @@ async function cargarPeliculas() {
   }
 }
 
-
-// Delegación de evento para eliminar
 document.querySelector('#tablaPeliculas tbody').addEventListener('click', async (e) => {
   if (e.target.classList.contains('btn-eliminar')) {
     const id = e.target.dataset.id;
@@ -56,6 +54,7 @@ document.querySelector('#tablaPeliculas tbody').addEventListener('click', async 
 
 document.getElementById('formAgregar').addEventListener('submit', async (e) => {
   e.preventDefault();
+
   const data = {
     titulo: document.getElementById('titulo').value.trim(),
     director: document.getElementById('director').value.trim(),
@@ -72,23 +71,13 @@ document.getElementById('formAgregar').addEventListener('submit', async (e) => {
   });
 
   if (res.ok) {
-    cargarPeliculas();
+    const result = await res.json();
+    console.log('Película agregada:', result.pelicula);
+    setTimeout(cargarPeliculas, 300); // pequeña espera por render
     e.target.reset();
   } else {
     alert('Error al agregar la película');
   }
 });
 
-/* Método de respaldo para asignar IDs secuenciales si vienen como undefined
-function corregirIdsFallback() {
-  const botones = document.querySelectorAll('.btn-eliminar');
-  botones.forEach((btn, index) => {
-    if (!btn.dataset.id || btn.dataset.id === 'undefined') {
-      btn.dataset.id = index + 1; // Asume que los IDs empiezan en 1 y son secuenciales
-    }
-  });
-}
-*/
-
 cargarPeliculas();
-// corregirIdsFallback(); // Descomenta solo para pruebas si los IDs llegan como undefined
